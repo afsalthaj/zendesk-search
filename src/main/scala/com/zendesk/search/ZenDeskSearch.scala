@@ -4,7 +4,7 @@ import cats.Show
 import cats.effect.IO
 import com.zendesk.search.ZenDeskSearch.{ GenericResult, ZenDeskSearchResult }
 import com.zendesk.search.model.Organisation.OrgId
-import com.zendesk.search.model.{ FIeldNames, Organisation, Ticket, User }
+import com.zendesk.search.model.{ FieldNames, Organisation, Ticket, User }
 import monocle.{ Lens, Optional }
 import com.zendesk.search.repo.{ Field, Repo }
 import cats.syntax.show._
@@ -22,8 +22,8 @@ final case class ZenDeskSearch(
       repoTicket,
       repoUser,
       query,
-      oId => Field(FIeldNames.ORG_ID, oId.id),
-      oId => Field(FIeldNames.ORG_ID, oId.id)
+      oId => Field(FieldNames.ORG_ID, oId.id),
+      oId => Field(FieldNames.ORG_ID, oId.id)
     ).map(ZenDeskSearchResult.Organisations)
 
   def getAllUsers(query: Field[String, String]): IO[ZenDeskSearchResult] =
@@ -32,8 +32,8 @@ final case class ZenDeskSearch(
       repoOrg,
       repoTicket,
       query,
-      oId => Field(FIeldNames.PRIMARY_KEY, oId.id),
-      oId => Field(FIeldNames.ORG_ID, oId.id)
+      oId => Field(FieldNames.PRIMARY_KEY, oId.id),
+      oId => Field(FieldNames.ORG_ID, oId.id)
     ).map(ZenDeskSearchResult.Users)
 
   def getAllTickets(query: Field[String, String]): IO[ZenDeskSearchResult] =
@@ -42,8 +42,8 @@ final case class ZenDeskSearch(
       repoOrg,
       repoUser,
       query,
-      oId => Field(FIeldNames.PRIMARY_KEY, oId.id),
-      oId => Field(FIeldNames.ORG_ID, oId.id)
+      oId => Field(FieldNames.PRIMARY_KEY, oId.id),
+      oId => Field(FieldNames.ORG_ID, oId.id)
     ).map(ZenDeskSearchResult.Tickets)
 
   /**

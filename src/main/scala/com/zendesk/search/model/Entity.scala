@@ -32,12 +32,12 @@ object Ticket extends JsonShowInstance {
 
     for {
       id <- doc
-              .downField("_id")
+              .downField(FieldNames.PRIMARY_KEY)
               .as[String](Decoder[String].or(Decoder[Int].emap(r => Right(r.toString))))
               .leftMap(_.message)
 
       orgId <- doc
-                 .downField("organization_id")
+                 .downField(FieldNames.ORG_ID)
                  .as[Option[String]](Decoder[Option[String]].or(Decoder[Option[Int]].emap(r => Right(r.map(_.toString)))))
                  .leftMap(_.message)
 
@@ -70,12 +70,12 @@ object User {
 
     for {
       id <- doc
-              .downField("_id")
+              .downField(FieldNames.PRIMARY_KEY)
               .as[String](Decoder[String].or(Decoder[Int].emap(r => Right(r.toString))))
               .leftMap(_.message)
 
       orgId <- doc
-                 .downField("organization_id")
+                 .downField(FieldNames.ORG_ID)
                  .as[Option[String]](Decoder[Option[String]].or(Decoder[Option[Int]].emap(r => Right(r.map(_.toString)))))
                  .leftMap(_.message)
 
@@ -109,7 +109,7 @@ object Organisation {
     val doc = json.hcursor
 
     doc
-      .downField("_id")
+      .downField(FieldNames.PRIMARY_KEY)
       .as[String](Decoder[String].or(Decoder[Int].emap(r => Right(r.toString))))
       .leftMap(_.message)
       .map(id => Organisation(Field.fromJson(json), OrgId(id)))
