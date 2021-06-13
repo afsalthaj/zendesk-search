@@ -52,7 +52,7 @@ The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
 The secondary index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
 
 Search fields from each `Json` (input is `JsonArray`) is obtained by 
-**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonOps.scala#L15).
+**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
 
 After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc. 
 This complex logic is actually delegated to `Monoid[IndexedInMemory]`, and using it `foldMonoid` of `fs2.Stream` 
