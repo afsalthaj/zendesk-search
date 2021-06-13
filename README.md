@@ -1,7 +1,5 @@
 ### Installation
 
-The application requires the following pre-requisites
-
 ### Pre-requisite
 
 Make sure the following are available in your system. 
@@ -43,7 +41,7 @@ cd target/scala-2.13
 
 ```
 
-Example:
+## Example:
 
 ```scala
 
@@ -115,9 +113,9 @@ to get the actual values.
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities
 are assumed to have a required primary-key, and an optional organization_id.
  
-### Libraries used: Typelevel
+### Libraries used
 
-Libraries used are predominantly from Typelevel. 
+Libraries used are predominantly from Typelevel ecosystem. 
 
 * decline     
 * monocle     
