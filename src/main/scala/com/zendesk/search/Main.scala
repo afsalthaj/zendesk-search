@@ -23,7 +23,6 @@ object Main extends IOApp with JsonSyntax with IOSyntax {
           _ => consoleIO.putStrLn("Successfully exiting..").as(ExitCode.Success)
         )
       )
-      .as(ExitCode.Success)
 
   def job(args: List[String]): IO[Unit] =
     for {

@@ -128,8 +128,8 @@ This should be existing as Json files which you will have to pass as command lin
 ## Assumptions
 
 * Search is basic. There is no prefix/suffix/like search. There is no sorted keys in index to enable binary search.
-* Search is always per key. You have to enter the key (search term) first to then search for the value
-* Search lists down all the information (all field values) of all related entities (instead of assuming a particular field)
+* Search is always per key. You have to enter the key (search term) first to then search for the value.
+* Search lists down all the information (all field values) of all related entities (instead of assuming a particular field).
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities
 are assumed to have a required primary-key, and an optional organization_id.
  
@@ -166,4 +166,5 @@ The patterns are subjected to change based on PR reviews from the team.
 * Higher kinded effect system is not being used yet, since for the most part, it is in-memory repository. This could change though (and also based on team's preference)
 * Dependency injection is not given much priority yet. This can be a bottle-neck if the app expands and requires
 external services (DynamoDb Client, ElasticSearch, S3Client/AWS SDK etc) in future.
-* Too many lines of code based on self-review. I could reduce it further.
+* Reduce more lines if possible.
+* Handling partial writes (when the repo is Elastic-search for instance), but this is for future.

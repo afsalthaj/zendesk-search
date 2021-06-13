@@ -8,7 +8,6 @@ object Dependencies {
     val circe         = "0.14.0"
     val catsScalaTest = "1.1.1"
     val scalaTestPlus = "3.1.0.0-RC2"
-    val catsLawSpec   = "2.0.0"
   }
 
   val decline       = "com.monovore"               %% "decline"                       % versions.decline
@@ -18,5 +17,4 @@ object Dependencies {
   val circeCore     = "io.circe"                   %% "circe-parser"                  % versions.circe
   val catsScalaTest = "org.typelevel"              %% "cats-effect-testing-scalatest" % versions.catsScalaTest % Test
   val scalaTestPlus = "org.scalatestplus"          %% "scalatestplus-scalacheck"      % versions.scalaTestPlus % Test
-  val catsLawSpec   = "org.typelevel"              %% "cats-laws"                     % versions.catsLawSpec   % Test
 }
