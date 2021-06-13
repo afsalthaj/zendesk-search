@@ -1,6 +1,4 @@
-## ZenDesk Search
-
-![](docs/sample.mov)
+# ZenDesk Search
 
 ## Core logic / Search
 
