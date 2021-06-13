@@ -4,7 +4,7 @@ import cats.Show
 import io.circe.Json
 import cats.syntax.show._
 
-trait JsonShowInstance extends JsonOps {
+trait JsonShowInstance {
   implicit val show: Show[Json] = (t: Json) => {
     t.fold(
       "",

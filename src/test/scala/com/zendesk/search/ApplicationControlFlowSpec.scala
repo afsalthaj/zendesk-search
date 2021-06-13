@@ -11,7 +11,7 @@ import com.zendesk.search.repo.Repo
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import com.zendesk.search.Search.SearchResult
+import com.zendesk.search.ZenDeskSearch.ZenDeskSearchResult
 
 class ApplicationControlFlowSpec
     extends AsyncFreeSpec
@@ -80,7 +80,7 @@ class ApplicationControlFlowSpec
       forAll { (str: String, users: List[User]) =>
         val testConsole = ConsoleIO.from(_ => IO.unit, IO(str))
         val searchImpl  =
-          Search(Repo.from(_ => IO.pure(users.headOption), _ => IO.pure(users)), emptyRepoOrg, emptyRepoTicket)
+          ZenDeskSearch(Repo.from(_ => IO.pure(users.headOption), _ => IO.pure(users)), emptyRepoOrg, emptyRepoTicket)
 
         val result = RunConsole
           .run(
@@ -91,7 +91,7 @@ class ApplicationControlFlowSpec
           // FIXME: Latest cats test integration (have found) wrong
           .unsafeRunSync()(cats.effect.unsafe.implicits.global)
 
-        result shouldBe SearchResult.Users(users.map(user => Search.Result(user, Nil, Nil)))
+        result shouldBe ZenDeskSearchResult.Users(users.map(user => ZenDeskSearch.GenericResult(user, Nil, Nil)))
 
       }
     }
@@ -102,7 +102,7 @@ class ApplicationControlFlowSpec
       forAll { (str: String, tickets: List[Ticket]) =>
         val testConsole = ConsoleIO.from(_ => IO.unit, IO(str))
         val searchImpl  =
-          Search(emptyRepoUser, emptyRepoOrg, Repo.from(_ => IO.pure(tickets.headOption), _ => IO.pure(tickets)))
+          ZenDeskSearch(emptyRepoUser, emptyRepoOrg, Repo.from(_ => IO.pure(tickets.headOption), _ => IO.pure(tickets)))
 
         val result = RunConsole
           .run(
@@ -113,7 +113,7 @@ class ApplicationControlFlowSpec
           // FIXME: Latest cats test integration (have found) wrong
           .unsafeRunSync()(cats.effect.unsafe.implicits.global)
 
-        result shouldBe SearchResult.Tickets(tickets.map(ticket => Search.Result(ticket, Nil, Nil)))
+        result shouldBe ZenDeskSearchResult.Tickets(tickets.map(ticket => ZenDeskSearch.GenericResult(ticket, Nil, Nil)))
       }
     }
   }
@@ -123,7 +123,7 @@ class ApplicationControlFlowSpec
       forAll { (str: String, organisations: List[Organisation]) =>
         val testConsole = ConsoleIO.from(_ => IO.unit, IO(str))
         val searchImpl  =
-          Search(emptyRepoUser, Repo.from(_ => IO.pure(organisations.headOption), _ => IO.pure(organisations)), emptyRepoTicket)
+          ZenDeskSearch(emptyRepoUser, Repo.from(_ => IO.pure(organisations.headOption), _ => IO.pure(organisations)), emptyRepoTicket)
 
         val result = RunConsole
           .run(
@@ -134,7 +134,7 @@ class ApplicationControlFlowSpec
           // FIXME: Latest cats test integration (have found) wrong
           .unsafeRunSync()(cats.effect.unsafe.implicits.global)
 
-        result shouldBe SearchResult.Organisations(organisations.map(ticket => Search.Result(ticket, Nil, Nil)))
+        result shouldBe ZenDeskSearchResult.Organisations(organisations.map(ticket => ZenDeskSearch.GenericResult(ticket, Nil, Nil)))
       }
     }
   }

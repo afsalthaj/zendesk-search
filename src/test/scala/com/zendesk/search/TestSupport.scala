@@ -11,7 +11,7 @@ trait TestSupport {
   val emptyRepoOrg    = emptyRepo[Organisation]
   val emptyRepoTicket = emptyRepo[Ticket]
 
-  val emptySearchImpl = Search(emptyRepoUser, emptyRepoOrg, emptyRepoTicket)
+  val emptySearchImpl = ZenDeskSearch(emptyRepoUser, emptyRepoOrg, emptyRepoTicket)
 
   /**
    * A console that always quits

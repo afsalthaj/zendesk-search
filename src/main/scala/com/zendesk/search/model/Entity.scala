@@ -88,7 +88,7 @@ object User {
   implicit val userOrgId: Optional[User, Organisation.OrgId] =
     Optional[User, Organisation.OrgId](_.orgId)(a => s => s.copy(orgId = Some(a)))
 
-  implicit val showTicket: Show[User] =
+  implicit val showUser: Show[User] =
     (t: User) => s"""
                     |
                     |## USER
@@ -121,7 +121,7 @@ object Organisation {
   implicit val orgIdOptional: Optional[Organisation, Organisation.OrgId] =
     Optional[Organisation, Organisation.OrgId](t => Some(t.id))(a => s => s.copy(id = a))
 
-  implicit val showTicket: Show[Organisation] =
+  implicit val showOrganisation: Show[Organisation] =
     (t: Organisation) => s"""
                             |
                             |## ORGANISATION

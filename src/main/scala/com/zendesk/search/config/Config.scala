@@ -8,7 +8,7 @@ final case class AppConfig(user: String, quite: Boolean, orgFilePath: String, ti
 import cats.syntax.apply._
 
 object AppConfig {
-  val config = Command(name = "Zen-Desk com.zendesk.search.Search", header = "Says hello!") {
+  val config = Command(name = "ZenDesk Search Application", header = "Welcome to ZenDesk Search!") {
 
     val orgPath =
       Opts.option[String]("org-path", help = "Path to organization data").withDefault("/Users/afsalthaj/MelbourneCoding/organizations.json")

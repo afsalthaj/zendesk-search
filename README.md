@@ -34,15 +34,35 @@ sbt assembly
 
 ## Core logic / Search
 
-https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
+https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
 
-The main idea here is, the data is streamed (fs2-stream) and aggregated into an indexed in-memory database. 
-The primary index is primary key of each data and the value is the data itself represented as Json.
-The secondary index will be keyed upon search string (obtained by decomposing each json value), and the value will be list of primary indices.
+```scala
+abstract sealed case class IndexedInMemory[Id, K, V, A](
+  primaryIndex: Map[Id, A],
+  secondaryIndex: Map[Field[K, V], List[Id]]
+)
 
-The search query is essentially a `Field[String, String]`. That is, the search term is a string, and the value is also a string.
-Result of this query can be obtained by first hitting the secondary index (inverted index) and then hitting the primary index
-to get the actual values.
+```
+
+### Write
+
+Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
+
+The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
+The secondary index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
+
+Search fields from each `Json` (input is `JsonArray`) is obtained by 
+**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonOps.scala#L15).
+
+After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc. 
+This complex logic is actually delegated to `Monoid[IndexedInMemory]`, and using it `foldMonoid` of `fs2.Stream` 
+(having to write less code)
+
+### Read
+The search query is essentially `Field[String, String]` (in this usecase).
+That is, the search term is a string, and the search value is also a string. Example: `Field("_id", "1")`
+Result of this query can be obtained by first hitting the secondary index (inverted index) to get the list
+of `ids`, and traversing the `ids` further and obtaining real values (`Json`) by hitting the primary index..
 
 ## Usage
 
@@ -107,7 +127,7 @@ This should be existing as Json files which you will have to pass as command lin
  
 ## Assumptions
 
-* Search is basic. There is no prefix/suffix/like search.
+* Search is basic. There is no prefix/suffix/like search. There is no sorted keys in index to enable binary search.
 * Search is always per key. You have to enter the key (search term) first to then search for the value
 * Search lists down all the information (all field values) of all related entities (instead of assuming a particular field)
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities

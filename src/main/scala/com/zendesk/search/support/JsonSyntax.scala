@@ -4,7 +4,7 @@ import io.circe.Json
 import cats.syntax.eq._
 import cats.instances.string._
 
-trait JsonOps {
+trait JsonSyntax {
   implicit class JsonOps(json: Json) {
 
     /**

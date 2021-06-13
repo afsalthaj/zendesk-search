@@ -15,5 +15,4 @@ object FieldsPrettyPrint {
 
     paddedList.mkString("\n")
   }
-
 }
