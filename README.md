@@ -47,8 +47,9 @@ as a way to get it done.
 
 ### Set up Environment using Nix (Optional)
 
-Make sure nix is in your system: https://nixos.org/download.html
-During installation, make sure that you add the nix to your bash profile.
+Make sure nix is in your system: https://nixos.org/download.html.
+
+Note that during installation, it will suggest you to add nix to your profile.
 
 ```scala
 git clone https://github.com/leigh-perry/nix-setup.git
