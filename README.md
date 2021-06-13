@@ -1,4 +1,4 @@
-## ZenDesk Search
+# ZenDesk Search
 
 ## Core logic / Search
 
