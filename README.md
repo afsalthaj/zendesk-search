@@ -1,4 +1,4 @@
-### Installation
+## Installation
 
 ### Pre-requisite
 
@@ -32,16 +32,7 @@ cd zendesk-search
 sbt assembly
 ```
 
-## Usage
-
-```scala
-cd target/scala-2.13
-./zendesk-search [press enter]
-// Also, try, ./zendesk-search --help
-
-```
-
-### Core logic / Search
+## Core logic / Search
 
 https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
 
@@ -53,7 +44,16 @@ The search query is essentially a `Field[String, String]` implies the search ter
 Result of this query can be obtained by first hitting the secondary index (inverted index) and then hitting the primary index
 to get the actual values.
 
-## Example:
+## Usage
+
+```scala
+cd target/scala-2.13
+./zendesk-search [press enter]
+// Also, try, ./zendesk-search --help
+
+```
+
+### Example:
 
 ```scala
 
@@ -94,7 +94,7 @@ verified         :  true
 
 ```
 
-### Quick usecase overview
+## Quick usecase overview
 
 The application is specific to searching entities across
 three documents that are as follows
@@ -105,7 +105,7 @@ three documents that are as follows
 
 This should be existing as Json files which you will have to pass as command line arguments
  
-### Assumptions
+## Assumptions
 
 * Search is basic. There is no prefix/suffix/like search.
 * Search is always per key. You have to enter the key (search term) first to then search for the value
@@ -113,7 +113,7 @@ This should be existing as Json files which you will have to pass as command lin
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities
 are assumed to have a required primary-key, and an optional organization_id.
  
-### Libraries used
+## Libraries used
 
 Libraries used are predominantly from Typelevel ecosystem. 
 
@@ -127,17 +127,17 @@ Libraries used are predominantly from Typelevel ecosystem.
 
 The libraries are subjected to change based on PR reviews from the team.
 
-### Why IO effect?
+## Why IO effect?
 
 The interfaces for the most part returns an actual effect `IO`.
 The exact effect system (or even pushing it even simple `Either[String, Result]`) will be based on team's preference and PR reviews.
 
-### Why polymorphic parameterization all over the place?
+## Why polymorphic parameterization all over the place?
 
 As much as possible, parameteric polymorphism is being used to improve reasonability.
 The patterns are subjected to change based on PR reviews from the team.
 
-### What could be improved?
+## What could be improved?
 
 * More test opportunities are there.
 * More code clean up and bring about consistency.
