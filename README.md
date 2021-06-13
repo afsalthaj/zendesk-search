@@ -130,7 +130,7 @@ The libraries are subjected to change based on PR reviews from the team.
 ## Why IO effect?
 
 The interfaces for the most part returns an actual effect `IO`.
-The exact effect system (or even pushing it even simple `Either[String, Result]`) will be based on team's preference and PR reviews.
+The exact effect system (or changing it to even `Either[String, Result]`) can happen based on team's preference and PR reviews.
 
 ## Why polymorphic parameterization all over the place?
 
