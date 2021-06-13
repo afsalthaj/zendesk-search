@@ -47,7 +47,7 @@ class ApplicationControlFlowSpec
   }
 
   "Application Control Wrong Selection" - {
-    "can search, and continue recursion if user gives wrong selection" in {
+    "show error message, and continue recursion if user gives wrong selection" in {
       val readLineState    = new AtomicReference[String]("wrongselection")
       val searchCompleted  = new AtomicBoolean(false)
       val errorMessageFlag = new AtomicReference[Option[String]](None)
