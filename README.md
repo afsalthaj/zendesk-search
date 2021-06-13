@@ -2,7 +2,7 @@
 
 ### Pre-requisite
 
-Make sure the following are available in your system. 
+Please make sure the following are available in your system. 
 
 * Java11
 * sbt  
