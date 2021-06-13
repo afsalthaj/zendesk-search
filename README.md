@@ -7,7 +7,7 @@ Please make sure the following are available in your system.
 * Java11
 * sbt  
 
-f you are familiar/interested in nix, read through the optional nix session,
+If you are familiar/interested in nix, read through the optional nix session,
 as a way to get it done. 
 
 ### Set up Environment using Nix (Optional)
