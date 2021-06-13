@@ -41,6 +41,18 @@ cd target/scala-2.13
 
 ```
 
+### Core logic / Search
+
+https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
+
+The main idea here is, the data is streamed (fs2-stream) and aggregated into an indexed in-memory database. 
+THe primary index will be keyed upon the primary key with value as Json
+The secondary index will be keyed upon search string, and list of indices that it will appear.
+
+The search query is essentially a `Field[String, String]` implies the search term is a string, and the value is a string.
+Result of this query can be obtained by first hitting the secondary index (inverted index) and then hitting the primary index
+to get the actual values.
+
 ## Example:
 
 ```scala
@@ -92,18 +104,6 @@ three documents that are as follows
 3) Tickets
 
 This should be existing as Json files which you will have to pass as command line arguments
-
-### Core logic
-
-https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
-
-The main idea here is, the data is streamed (fs2-stream) and aggregated into an indexed in-memory database. 
-THe primary index will be keyed upon the primary key with value as Json
-The secondary index will be keyed upon search string, and list of indices that it will appear.
-
-The search query is essentially a `Field[String, String]` implies the search term is a string, and the value is a string.
-Result of this query can be obtained by first hitting the secondary index (inverted index) and then hitting the primary index
-to get the actual values.
  
 ### Assumptions
 
