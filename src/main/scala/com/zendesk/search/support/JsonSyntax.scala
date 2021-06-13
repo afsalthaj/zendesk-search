@@ -3,6 +3,7 @@ package com.zendesk.search.support
 import io.circe.Json
 import cats.syntax.eq._
 import cats.instances.string._
+import com.zendesk.search.repo.Field
 
 trait JsonSyntax {
   implicit class JsonOps(json: Json) {
@@ -20,5 +21,11 @@ trait JsonSyntax {
       a => a.toList.flatMap(_.decomposeString),
       a => a.values.toList.flatMap(_.decomposeString)
     )
+
+    def asFields: List[Field[String, Json]] =
+      for {
+        obj    <- json.asObject.toList
+        (k, v) <- obj.toVector
+      } yield Field(k, v)
   }
 }

@@ -7,7 +7,7 @@ import cats.syntax.either._
 import monocle.Optional
 import monocle.Lens
 import com.zendesk.search.repo.Field
-import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance }
+import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSyntax }
 
 /**
  * Note: The entities could actually possess the correct
@@ -26,7 +26,7 @@ import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance }
  */
 final case class Ticket(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object Ticket extends JsonShowInstance {
+object Ticket extends JsonSyntax with JsonShowInstance {
   def fromJson(json: Json): Either[String, Ticket] = {
     val doc = json.hcursor
 
@@ -41,7 +41,7 @@ object Ticket extends JsonShowInstance {
                  .as[Option[String]](Decoder[Option[String]].or(Decoder[Option[Int]].emap(r => Right(r.map(_.toString)))))
                  .leftMap(_.message)
 
-    } yield Ticket(Field.fromJson(json), id, orgId.map(Organisation.OrgId))
+    } yield Ticket(json.asFields, id, orgId.map(Organisation.OrgId))
   }
 
   implicit val ticketId: Lens[Ticket, String] =
@@ -64,7 +64,7 @@ object Ticket extends JsonShowInstance {
 
 final case class User(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object User {
+object User extends JsonSyntax with JsonShowInstance {
   def fromJson(json: Json): Either[String, User] = {
     val doc = json.hcursor
 
@@ -79,7 +79,7 @@ object User {
                  .as[Option[String]](Decoder[Option[String]].or(Decoder[Option[Int]].emap(r => Right(r.map(_.toString)))))
                  .leftMap(_.message)
 
-    } yield User(Field.fromJson(json), id, orgId.map(Organisation.OrgId))
+    } yield User(json.asFields, id, orgId.map(Organisation.OrgId))
   }
 
   implicit val userId: Lens[User, String] =
@@ -102,7 +102,7 @@ object User {
 
 final case class Organisation(fields: List[Field[String, Json]], id: Organisation.OrgId)
 
-object Organisation {
+object Organisation extends JsonSyntax with JsonShowInstance {
   final case class OrgId(id: String)
 
   def fromJson(json: Json): Either[String, Organisation] = {
@@ -112,7 +112,7 @@ object Organisation {
       .downField(FieldNames.PRIMARY_KEY)
       .as[String](Decoder[String].or(Decoder[Int].emap(r => Right(r.toString))))
       .leftMap(_.message)
-      .map(id => Organisation(Field.fromJson(json), OrgId(id)))
+      .map(id => Organisation(json.asFields, OrgId(id)))
   }
 
   implicit val orgId: Lens[Organisation, String] =

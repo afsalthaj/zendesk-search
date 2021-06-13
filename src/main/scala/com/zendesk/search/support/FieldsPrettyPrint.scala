@@ -5,14 +5,17 @@ import com.zendesk.search.repo.Field
 import cats.syntax.show._
 
 object FieldsPrettyPrint {
-  def apply[K: Show, V: Show](list: List[Field[K, V]]): String = {
-    val maxKeySize = list.map(_.k.show.length).max
+  def apply[K: Show, V: Show](list: List[Field[K, V]]): String =
+    if (list.isEmpty)
+      ""
+    else {
+      val maxKeySize = list.map(_.k.show.length).max
 
-    val paddedList =
-      list.map { r =>
-        s"${r.k.show.padTo(maxKeySize, " ").mkString}  :  ${r.v.show}"
-      }
+      val paddedList =
+        list.map { r =>
+          s"${r.k.show.padTo(maxKeySize, " ").mkString}  :  ${r.v.show}"
+        }
 
-    paddedList.mkString("\n")
-  }
+      paddedList.mkString("\n")
+    }
 }

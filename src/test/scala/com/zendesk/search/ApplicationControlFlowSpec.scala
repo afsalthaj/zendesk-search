@@ -19,7 +19,7 @@ class ApplicationControlFlowSpec
     with Matchers
     with TestSupport
     with ScalaCheckPropertyChecks
-    with Arbitraries {
+    with ArbitraryEntities {
   "Application Control Exit Flow" - {
     "can exit if user gives quit" in {
       RunConsole
