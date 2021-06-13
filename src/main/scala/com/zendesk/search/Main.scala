@@ -20,7 +20,7 @@ object Main extends IOApp with JsonSyntax with IOSyntax {
       .flatMap(
         _.fold(
           t => consoleIO.putStrLn(s"Application Failed. ${t}").as(ExitCode.Error),
-          _ => consoleIO.putStrLn("Successfully exiting..").as(ExitCode.Success)
+          _ => consoleIO.putStrLn("Successfully Exited.").as(ExitCode.Success)
         )
       )
 
