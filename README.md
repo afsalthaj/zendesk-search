@@ -1,3 +1,40 @@
+## ZenDesk Search
+
+![](docs/sample.mov)
+
+## Core logic / Search
+
+https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
+
+```scala
+abstract sealed case class IndexedInMemory[Id, K, V, A](
+  primaryIndex: Map[Id, A],
+  secondaryIndex: Map[Field[K, V], List[Id]]
+)
+
+```
+
+### Write
+
+Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
+
+The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
+The secondary index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
+
+Search fields from each `Json` (input is `JsonArray`) is obtained by
+**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
+
+After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
+This complex logic is actually delegated to `Monoid[IndexedInMemory]`, and using it in the `foldMonoid` of `fs2.Stream`
+(having to write less code)
+
+### Read
+The search query is essentially `Field[String, String]` (in this usecase).
+That is, the search term is a string, and the search value is also a string. Example: `Field("_id", "1")`.
+Result of this query can be obtained by first hitting the secondary index (inverted index) to get the list
+of `ids`, and traversing the `ids` to hit the primary to further obtain the real `Json` values.
+
+
 ## Installation
 
 ### Pre-requisite
@@ -31,38 +68,6 @@ git clone https://github.com/afsalthaj/zendesk-search.git
 cd zendesk-search
 sbt assembly
 ```
-
-## Core logic / Search
-
-https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
-
-```scala
-abstract sealed case class IndexedInMemory[Id, K, V, A](
-  primaryIndex: Map[Id, A],
-  secondaryIndex: Map[Field[K, V], List[Id]]
-)
-
-```
-
-### Write
-
-Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
-
-The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
-The secondary index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
-
-Search fields from each `Json` (input is `JsonArray`) is obtained by 
-**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
-
-After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc. 
-This complex logic is actually delegated to `Monoid[IndexedInMemory]`, and using it in the `foldMonoid` of `fs2.Stream` 
-(having to write less code)
-
-### Read
-The search query is essentially `Field[String, String]` (in this usecase).
-That is, the search term is a string, and the search value is also a string. Example: `Field("_id", "1")`.
-Result of this query can be obtained by first hitting the secondary index (inverted index) to get the list
-of `ids`, and traversing the `ids` to hit the primary to further obtain the real `Json` values.
 
 ## Usage
 
