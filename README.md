@@ -1,7 +1,5 @@
 ## ZenDesk Search
 
-![](docs/sample.mov)
-
 ## Core logic / Search
 
 https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
