@@ -141,9 +141,8 @@ Libraries used are predominantly from Typelevel ecosystem.
 * monocle     
 * fs2         
 * circe        
-* catsScalaTes
+* catsScalaTest
 * scalaTestPlus
-* catsLawSpec 
 
 The libraries are subjected to change based on PR reviews from the team.
 
