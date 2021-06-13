@@ -73,7 +73,7 @@ sbt assembly
 ```scala
 cd target/scala-2.13
 ./zendesk-search --org-path ../../data/organizations.json --ticket-path "../../data/tickets.json" --user-file "../../data/users.json"
-// alson try ./zendesk-search --help
+// Also try ./zendesk-search --help
 ```
 
 ### Example:
