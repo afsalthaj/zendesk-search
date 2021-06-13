@@ -55,7 +55,7 @@ class IndexedInMemorySpec
 
   // Slighlty redundant yet good to keep it.
   "IndexedInMemory merges into inverted index for odd number of records" - {
-    "Given trhee indexed in-memory the monoidal addition implements indexing" in {
+    "Given three indexed in-memory the monoidal addition implements indexing" in {
       final case class A(id: Int, list: List[Field[Int, Int]])
 
       // Original data in doc
