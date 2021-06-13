@@ -37,7 +37,7 @@ sbt assembly
 https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
 
 The main idea here is, the data is streamed (fs2-stream) and aggregated into an indexed in-memory database. 
-The primary index will be keyed upon the primary key of each data and the value is data itself represented as Json
+The primary index is primary key of each data and the value is the data itself represented as Json.
 The secondary index will be keyed upon search string (obtained by decomposing each json value), and the value will be list of indices.
 
 The search query is essentially a `Field[String, String]`. That is, the search term is a string, and the value is also a string.
