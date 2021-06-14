@@ -20,8 +20,8 @@ class RepoSpec
   // Most of the tests are in IndexedInMemorySpec
   "Repp roundtrip" - {
     "All primary keys are available in Repo" in {
-      // This implies if a line of record is a tuple with first element a primary key
-      // there exists a lens. In below case, this tuple (String, Map[String, List[String]])
+      // This implies if a single record of data is a tuple with primary key as the first element,
+      // In below particular test case, this tuple is actually (String, Map[String, List[String]])
       implicit def lensTuple[A, B]: Lens[(A, B), A] =
         Lens[(A, B), A](_._1)(a => b => (a, b._2))
 

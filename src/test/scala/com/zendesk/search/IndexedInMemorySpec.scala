@@ -17,13 +17,20 @@ class IndexedInMemorySpec
     with ScalaCheckPropertyChecks
     with ArbitraryJsonInstance {
 
-  // Generate a whole bunch of input represented as Map[A, Map[B, List[C]]
-  // where A is the primary key of the data Map[B, List[C]] and B is the field name.
-  // Example: Test can generate Map("" -> Map("" -> List())), and see how search index behaves, covering empty string search!
+  /**
+   * Generate a whole bunch of input data represented as `Map[A, Map[B, List[C]]`.
+   * Example it can generate Map("" -> Map("" -> List())), and see how search index behaves, covering empty string search.
+   *
+   * In, {{{ Map[A, Map[B, List[C]]] }}},
+   * A is the primary key of the data.
+   * `Map[B, List[C]]` is the data itself, which is a key-value pair where key (field-name) is `B`
+   * This is similar to { "id" : a, "b" : ["c1", "c2"] }
+   * Test
+   */
   "IndexedInMemory Content" - {
     "All primary keys are available in primaryIndex, and all field names are available in searchIndex" in {
-      // This implies if a line of record is a tuple with first element a primary key
-      // there exists a lens. In below case, this tuple (String, Map[String, List[String]])
+      // This implies if a single record of data is a tuple with primary key as the first element,
+      // In below particular test case, this tuple is actually (String, Map[String, List[String]])
       implicit def lensTuple[A, B]: Lens[(A, B), A] =
         Lens[(A, B), A](_._1)(a => b => (a, b._2))
 
@@ -53,8 +60,9 @@ class IndexedInMemorySpec
   /**
    * Explanation:
    * We know, List[(Field, List[V]]) can be an example summary of a simple json object.
-   * The Field is each key in JsonObject, and value can be tokenised to a List[V]. Example:  { key: [v1, v2, v3] }
-   * In this test case, we keep the Field to be a constant (fieldKey), so that we can easily check if the property holds.
+   * The `Field` is each key in JsonObject, and value can be tokenised to a `List[V]`. Example:  { key: [v1, v2, v3] }
+   * In this test case, we keep the value of `Field` to be a constant (generated randomly called `fieldKey`),
+   * so that we can easily check if the property holds.
    */
   "IndexedInMemory.singletonIndexedMemory" - {
     "the value of each key in the json object will be further tokenised before pushing to searchIndex" in {
