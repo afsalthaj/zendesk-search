@@ -6,6 +6,7 @@ import cats.syntax.show._
 import com.zendesk.search.ZenDeskSearch.{ GenericResult, ZenDeskSearchResult }
 import com.zendesk.search.ZenDeskSearch.ZenDeskSearchResult.{ Organisations, Tickets, Users }
 import com.zendesk.search.model.{ Organisation, Ticket, User }
+import com.zendesk.search.repo.Field
 
 /**
  * Pretty-print of every data structure
@@ -39,7 +40,7 @@ trait ShowInstances {
                       |
                       |## TICKET
                       |----------------------------------------
-                      |${FieldsPrettyPrint(t.fields)}
+                      |${prettyPrintFields(t.fields)}
                       |
                       |----------------------------------------
                       |
@@ -50,7 +51,7 @@ trait ShowInstances {
                     |
                     |## USER
                     |----------------------------------------
-                    |${FieldsPrettyPrint(t.fields)}
+                    |${prettyPrintFields(t.fields)}
                     |
                     |----------------------------------------
                     |
@@ -61,7 +62,7 @@ trait ShowInstances {
                             |
                             |## ORGANISATION
                             |----------------------------------------
-                            |${FieldsPrettyPrint(t.fields)}
+                            |${prettyPrintFields(t.fields)}
                             |
                             |----------------------------------------
                             |
@@ -78,6 +79,20 @@ trait ShowInstances {
 
   def lineSeparatedString(list: List[String]): String =
     if (list.isEmpty) "-- Not Found --" else list.mkString("\n")
+
+  def prettyPrintFields[K: Show, V: Show](list: List[Field[K, V]]): String =
+    if (list.isEmpty)
+      ""
+    else {
+      val maxKeySize = list.map(_.k.show.length).max
+
+      val paddedList =
+        list.map { r =>
+          s"${r.k.show.padTo(maxKeySize, " ").mkString}  :  ${r.v.show}"
+        }
+
+      paddedList.mkString("\n")
+    }
 }
 
 object ShowInstances extends ShowInstances
