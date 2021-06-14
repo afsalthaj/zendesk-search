@@ -16,8 +16,26 @@ class IndexedInMemorySpec
     with TestSupport
     with ScalaCheckPropertyChecks
     with ArbitraryJsonInstance {
-  "IndexedInMemory works for singleton data" - {
-    "given two indexed in-memory the monoidal addition implements indexing" in {
+  "IndexedInMemory works for empty fields" - {
+    "given a single indexed in-memory with empty fields, the monoidal addition implements indexing" in {
+      final case class A(id: Int, list: List[Field[Int, Int]])
+
+      // Original data in doc
+      val a1 = A(1, Nil)
+
+      // Data has an Id
+      implicit val lens: Lens[A, Int] = Lens[A, Int](_.id)(a => b => b.copy(id = a))
+
+      // A stream of singleton can be loaded to inmemory indexed repo
+      IndexedInMemory.from(Stream.eval(IO.pure(a1)))(_.list)(v => List(v)).map { indexedInMemory =>
+        indexedInMemory.primaryIndex shouldBe (Map(1 -> a1))
+        indexedInMemory.secondaryIndex shouldBe (Map())
+      }
+    }
+  }
+
+  "IndexedInMemory works for singleton data with non-empty fields" - {
+    "given a single indexed in-memory the monoidal addition implements indexing" in {
       final case class A(id: Int, list: List[Field[Int, Int]])
 
       // Original data in doc
