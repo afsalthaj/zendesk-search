@@ -4,7 +4,7 @@
 
 ## Core logic / Search
 
-https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
+https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L30
 
 ```scala
 abstract sealed case class IndexedInMemory[Id, K, V, A](
@@ -22,7 +22,7 @@ The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
 The search index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
 
 Search fields from each `Json` (input is `JsonArray`) is obtained by
-**decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
+**decomposing Json structure** (https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSupport.scala#L16).
 
 After the write is finished, the search index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
 This merge of index (grabbing all index of a search term) is done by the `Monoid` 
