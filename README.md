@@ -9,7 +9,7 @@ https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zende
 ```scala
 abstract sealed case class IndexedInMemory[Id, K, V, A](
   primaryIndex: Map[Id, A],
-  secondaryIndex: Map[Field[K, V], List[Id]]
+  searchIndex: Map[Field[K, V], List[Id]]
 )
 
 ```

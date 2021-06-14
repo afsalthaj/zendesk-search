@@ -10,17 +10,18 @@ import monocle.Lens
 
 abstract sealed case class IndexedInMemory[Id, K, V, A](
   primaryIndex: Map[Id, A],
-  secondaryIndex: Map[Field[K, V], List[Id]]
+  searchIndex: Map[Field[K, V], List[Id]]
 )
 
 object IndexedInMemory {
+
   /**
    * Defining given two IndexedInMemory, how to squash them.
    * It is a simple monoidal additions of Map
    */
   implicit def monoidOfIndexedInMemory[Id, K, V, A] = new Monoid[IndexedInMemory[Id, K, V, A]] {
     override def combine(x: IndexedInMemory[Id, K, V, A], y: IndexedInMemory[Id, K, V, A]): IndexedInMemory[Id, K, V, A] =
-      new IndexedInMemory((x.primaryIndex ++ y.primaryIndex), x.secondaryIndex |+| y.secondaryIndex) {}
+      new IndexedInMemory((x.primaryIndex ++ y.primaryIndex), x.searchIndex |+| y.searchIndex) {}
 
     override def empty: IndexedInMemory[Id, K, V, A]                                                                     =
       new IndexedInMemory[Id, K, V, A](Map.empty, Map.empty) {}

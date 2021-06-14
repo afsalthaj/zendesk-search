@@ -29,7 +29,7 @@ class IndexedInMemorySpec
       // A stream of singleton can be loaded to inmemory indexed repo
       IndexedInMemory.from(Stream.eval(IO.pure(a1)))(_.list)(v => List(v)).map { indexedInMemory =>
         indexedInMemory.primaryIndex shouldBe (Map(1 -> a1))
-        indexedInMemory.secondaryIndex shouldBe (Map())
+        indexedInMemory.searchIndex shouldBe (Map())
       }
     }
   }
@@ -47,7 +47,7 @@ class IndexedInMemorySpec
       // A stream of singleton can be loaded to inmemory indexed repo
       IndexedInMemory.from(Stream.eval(IO.pure(a1)))(_.list)(v => List(v)).map { indexedInMemory =>
         indexedInMemory.primaryIndex shouldBe (Map(1 -> a1))
-        indexedInMemory.secondaryIndex shouldBe (Map(Field(2, 3) -> List(1)))
+        indexedInMemory.searchIndex shouldBe (Map(Field(2, 3) -> List(1)))
       }
     }
   }
@@ -66,7 +66,7 @@ class IndexedInMemorySpec
       // Related records will be merged with inverted index.
       IndexedInMemory.from(Stream.fromIterator[IO](List(a1, a2).iterator, 1))(_.list)(v => List(v)).map { indexedInMemory =>
         indexedInMemory.primaryIndex shouldBe (Map(1 -> a1, 2 -> a2))
-        indexedInMemory.secondaryIndex shouldBe (Map(Field(2, 3) -> List(1, 2), Field(3, 4) -> List(1), Field(5, 6) -> List(2)))
+        indexedInMemory.searchIndex shouldBe (Map(Field(2, 3) -> List(1, 2), Field(3, 4) -> List(1), Field(5, 6) -> List(2)))
       }
     }
   }
@@ -87,7 +87,7 @@ class IndexedInMemorySpec
       // Related records will be merged with inverted index.
       IndexedInMemory.from(Stream.fromIterator[IO](List(a1, a2, a3).iterator, 1))(_.list)(v => List(v)).map { indexedInMemory =>
         indexedInMemory.primaryIndex shouldBe (Map(1 -> a1, 2 -> a2, 3 -> a3))
-        indexedInMemory.secondaryIndex shouldBe (Map(Field(2, 3) -> List(1, 2), Field(3, 4) -> List(1, 3), Field(5, 6) -> List(2, 3)))
+        indexedInMemory.searchIndex shouldBe (Map(Field(2, 3) -> List(1, 2), Field(3, 4) -> List(1, 3), Field(5, 6) -> List(2, 3)))
       }
     }
   }

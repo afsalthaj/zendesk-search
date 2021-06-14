@@ -50,7 +50,7 @@ object Repo {
       field =>
         IO.pure(
           (for {
-            ids <- inMemory.secondaryIndex.get(field)
+            ids <- inMemory.searchIndex.get(field)
             v   <- ids.traverse(id => inMemory.primaryIndex.get(id))
           } yield v).toList.flatten
         )
