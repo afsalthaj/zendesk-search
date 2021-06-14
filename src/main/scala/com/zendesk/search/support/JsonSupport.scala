@@ -13,14 +13,15 @@ trait JsonSupport {
      * is tokenized and that is then pushed to the index
      * from call-site
      */
-    def decomposeString: List[String] = json.fold(
-      List(""),
-      r => List(r.toString),
-      r => List(r.toString),
-      s => s :: s.split(" ").filterNot(_ === "").toList,
-      a => a.toList.flatMap(_.decomposeString),
-      a => a.values.toList.flatMap(_.decomposeString)
-    )
+    def decomposeString: List[String] =
+      json.fold(
+        List(""),
+        r => List(r.toString),
+        r => List(r.toString),
+        s => s :: s.split(" ").filterNot(_ === "").toList,
+        a => a.toList.flatMap(_.decomposeString),
+        a => a.values.toList.flatMap(_.decomposeString)
+      )
 
     def asFields: List[Field[String, Json]] =
       for {

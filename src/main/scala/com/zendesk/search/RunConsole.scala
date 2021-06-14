@@ -51,6 +51,7 @@ object RunConsole {
       searchTerm  <- consoleIO.readLine
       _           <- consoleIO.putStrLn("Enter search value")
       searchValue <- consoleIO.readLine
+      _ = println(":is:"+searchValue + ":is:" + searchValue + ":is:")
       query        = Field(searchTerm, searchValue)
       result      <-
         searchSelection match {
