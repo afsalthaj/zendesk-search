@@ -31,18 +31,21 @@ object IndexedInMemory {
     stream: Stream[IO, A]
   )(f: A => List[Field[K, V1]])(g: V1 => List[V2])(implicit H: Lens[A, Id]): IO[IndexedInMemory[Id, K, V2, A]] =
     stream
-      .map(a =>
-        new IndexedInMemory[Id, K, V2, A](
-          Map(H.get(a) -> a), {
-            val allFieldsInA: List[Field[K, V1]] = f(a)
-            val decomposed: List[Field[K, V2]]   =
-              allFieldsInA.flatMap(field => g(field.v).map(v => Field(field.k, v)))
-            decomposed.map(field => (field, List(H.get(a)))).toMap
-          }
-        ) {}
-      )
+      .map(a => singletonIndexedMemory(H.get(a), a)(f)(g))
       .foldMonoid
       .compile
       .toList
       .map(r => r.foldMap(identity))
+
+  def singletonIndexedMemory[Id, K, V1, V2, A](key: Id, v: A)(
+    f: A => List[Field[K, V1]]
+  )(g: V1 => List[V2]): IndexedInMemory[Id, K, V2, A] =
+    new IndexedInMemory[Id, K, V2, A](
+      Map(key -> v), {
+        val allFieldsInA: List[Field[K, V1]] = f(v)
+        val v1Tokenized: List[Field[K, V2]]  =
+          allFieldsInA.flatMap(field => g(field.v).map(v => Field(field.k, v)))
+        v1Tokenized.map(field => (field, List(key))).toMap
+      }
+    ) {}
 }

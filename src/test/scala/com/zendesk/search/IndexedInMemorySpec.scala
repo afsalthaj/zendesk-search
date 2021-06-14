@@ -16,6 +16,19 @@ class IndexedInMemorySpec
     with TestSupport
     with ScalaCheckPropertyChecks
     with ArbitraryJsonInstance {
+  "IndexedInMemory.singletonIndexedMemory" - {
+    "Given a list(list(string)) as value for a field, in a data with a primary-key, the values will be further tokenised before pushing to searchIndex" in {
+      forAll { (primaryKey: String, v: List[List[String]], fieldKey: String) =>
+        val string: IndexedInMemory[String, String, String, List[List[String]]] =
+          IndexedInMemory.singletonIndexedMemory(primaryKey, v)(a => a.map(list => Field(fieldKey, list)))(identity)
+
+        println(string.searchIndex)
+        string.primaryIndex shouldBe (Map(primaryKey -> v))
+        string.searchIndex shouldBe (v.flatten.map(str => (Field(fieldKey, str), List(primaryKey))).toMap)
+      }
+    }
+  }
+
   "IndexedInMemory works for empty fields" - {
     "given a single indexed in-memory with empty fields, the monoidal addition implements indexing" in {
       final case class A(id: Int, list: List[Field[Int, Int]])
