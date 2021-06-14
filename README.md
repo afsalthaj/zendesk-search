@@ -1,5 +1,7 @@
 # ZenDesk Search
 
+[![Build Status](https://travis-ci.com/afsalthaj/zendesk-search.svg?branch=master)](https://travis-ci.com/afsalthaj/zendesk-search)
+
 ## Core logic / Search
 
 https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L29
