@@ -1,7 +1,6 @@
 package com.zendesk.search
 
 import _root_.io.circe.{ Json, _ }
-import com.zendesk.search.model.Organisation
 import org.scalacheck.{ Arbitrary, Gen }
 
 trait ArbitraryJsonInstance {
@@ -36,12 +35,6 @@ trait ArbitraryJsonInstance {
       fields.map(JsonObject.fromFoldable[List])
     )
   }
-
-  def orgId =
-    Gen.choose[Int](1, 10).map(r => Organisation.OrgId(r.toString))
-
-  def primaryKey: Gen[String] =
-    Gen.choose[Int](1, 5).flatMap(n => Gen.listOfN(n, Gen.alphaChar)).map(_.mkString)
 
   def genArray(depth: Int): Gen[Json] = Gen.choose(0, maxJsonArraySize).flatMap { size =>
     Gen.listOfN(size, genJsonAtDepth(depth + 1)).map(Json.arr)
