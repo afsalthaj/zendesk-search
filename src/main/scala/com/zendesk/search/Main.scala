@@ -9,9 +9,9 @@ import cats.syntax.either._
 import cats.effect.IOApp
 import com.zendesk.search.model.{ Organisation, Ticket, User }
 import com.zendesk.search.repo.Repo
-import support.{ IOSyntax, JsonSyntax }
+import support.{ IOSyntax, JsonSupport }
 
-object Main extends IOApp with JsonSyntax with IOSyntax {
+object Main extends IOApp with JsonSupport with IOSyntax {
   val consoleIO: ConsoleIO =
     ConsoleIO.live
 

@@ -7,7 +7,7 @@ import cats.syntax.either._
 import monocle.Optional
 import monocle.Lens
 import com.zendesk.search.repo.Field
-import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSyntax }
+import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSupport }
 
 /**
  * Note: The entities could actually possess the correct
@@ -26,7 +26,7 @@ import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSyn
  */
 final case class Ticket(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object Ticket extends JsonSyntax with JsonShowInstance {
+object Ticket extends JsonSupport with JsonShowInstance {
   def fromJson(json: Json): Either[String, Ticket] = {
     val doc = json.hcursor
 
@@ -64,7 +64,7 @@ object Ticket extends JsonSyntax with JsonShowInstance {
 
 final case class User(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object User extends JsonSyntax with JsonShowInstance {
+object User extends JsonSupport with JsonShowInstance {
   def fromJson(json: Json): Either[String, User] = {
     val doc = json.hcursor
 
@@ -102,7 +102,7 @@ object User extends JsonSyntax with JsonShowInstance {
 
 final case class Organisation(fields: List[Field[String, Json]], id: Organisation.OrgId)
 
-object Organisation extends JsonSyntax with JsonShowInstance {
+object Organisation extends JsonSupport with JsonShowInstance {
   final case class OrgId(id: String)
 
   def fromJson(json: Json): Either[String, Organisation] = {

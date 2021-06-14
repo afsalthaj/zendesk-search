@@ -3,9 +3,9 @@ package com.zendesk.search
 import com.zendesk.search.model.{ FieldNames, Organisation, Ticket, User }
 import org.scalacheck.{ Arbitrary, Gen }
 import _root_.io.circe.Json
-import com.zendesk.search.support.JsonSyntax
+import com.zendesk.search.support.JsonSupport
 
-trait ArbitraryEntities extends ArbitraryJsonInstance with JsonSyntax {
+trait ArbitraryEntities extends ArbitraryJsonInstance with JsonSupport {
   def orgId: Gen[Organisation.OrgId] =
     Gen.choose[Int](1, 10).map(r => Organisation.OrgId(r.toString))
 

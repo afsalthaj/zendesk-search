@@ -5,7 +5,7 @@ import cats.syntax.eq._
 import cats.instances.string._
 import com.zendesk.search.repo.Field
 
-trait JsonSyntax {
+trait JsonSupport {
   implicit class JsonOps(json: Json) {
 
     /**
