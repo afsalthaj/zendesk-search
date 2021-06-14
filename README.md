@@ -101,7 +101,7 @@ Searching tickets...
 _id              :  c702e937-5f2d-4d34-878a-fcb7d1ddf6aa
 url              :  http://initech.zendesk.com/api/v2/tickets/c702e937-5f2d-4d34-878a-fcb7d1ddf6aa.json
 external_id      :  5e349072-774b-4c77-ba63-61bca77c82ff
-  created_at       :  2016-05-25T12:48:45 -10:00
+created_at       :  2016-05-25T12:48:45 -10:00
 type             :  question
 subject          :  A Drama in Zimbabwe
 
