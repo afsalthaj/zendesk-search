@@ -44,8 +44,6 @@ class IndexedInMemorySpec
         val inputFields =
           fieldValues.flatMap(fieldsWithValuesNonEmpty).distinct
 
-        val repo = Repo.fromIndexedInMemory(indexedInMemory)
-
         indexedInMemory.primaryIndex.keys.toList shouldBe (data.keys.toList)
         indexedInMemory.searchIndex.keys.toList.map(_.k).distinct.sorted shouldBe (inputFields.sorted)
       }
