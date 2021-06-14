@@ -16,15 +16,21 @@ class IndexedInMemorySpec
     with TestSupport
     with ScalaCheckPropertyChecks
     with ArbitraryJsonInstance {
+
+  /**
+   * Explanation:
+   * We know, List[(Field, List[V]]) can be an example summary of a simple json object.
+   * The Field is each key in JsonObject, and value can be tokenised to a List[V]. Example:  { key: [v1, v2, v3] }
+   * In this test case, we keep the Field to be a constant (fieldKey), so that we can easily check if the property holds.
+   */
   "IndexedInMemory.singletonIndexedMemory" - {
-    "Given a list(list(string)) as value for a field, in a data with a primary-key, the values will be further tokenised before pushing to searchIndex" in {
+    "the value of each key in the json object will be further tokenised before pushing to searchIndex" in {
       forAll { (primaryKey: String, v: List[List[String]], fieldKey: String) =>
-        val string: IndexedInMemory[String, String, String, List[List[String]]] =
+        val indexedInMemory: IndexedInMemory[String, String, String, List[List[String]]] =
           IndexedInMemory.singletonIndexedMemory(primaryKey, v)(a => a.map(list => Field(fieldKey, list)))(identity)
 
-        println(string.searchIndex)
-        string.primaryIndex shouldBe (Map(primaryKey -> v))
-        string.searchIndex shouldBe (v.flatten.map(str => (Field(fieldKey, str), List(primaryKey))).toMap)
+        indexedInMemory.primaryIndex shouldBe (Map(primaryKey -> v))
+        indexedInMemory.searchIndex shouldBe (v.flatten.map(str => (Field(fieldKey, str), List(primaryKey))).toMap)
       }
     }
   }
