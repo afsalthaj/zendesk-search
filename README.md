@@ -19,19 +19,19 @@ abstract sealed case class IndexedInMemory[Id, K, V, A](
 Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
 
 The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
-The secondary index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
+The search index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
 
 Search fields from each `Json` (input is `JsonArray`) is obtained by
 **decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
 
-After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
+After the write is finished, the search index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
 This merge of index (grabbing all index of a search term) is done by the `Monoid` 
 instance of `IndexedInMemory`, which is used with `foldMonoid` of `fs2.Stream`
 
 ### Read
 The search query is essentially `Field[String, String]` (in this usecase).
 That is, the search term is a string, and the search value is also a string. Example: `Field("_id", "1")`.
-Result of this query can be obtained by first hitting the secondary index (inverted index) to get the list
+Result of this query can be obtained by first hitting the search index (inverted index) to get the list
 of `ids`, and traversing the `ids` to hit the primary to further obtain the real `Json` values.
 
 
