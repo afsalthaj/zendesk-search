@@ -149,13 +149,11 @@ The patterns are subjected to change based on PR reviews from the team.
 
 ## What could be improved?
 
-* More test opportunities are there.
-* More code clean up and bring about consistency.
+* More tests required (RepoSpec)
 * FieldNames.scala could be avoided somehow.
 * More bullet-proof error handling with Monad Transformers. Intentionally avoided for the time being.
 * Higher kinded effect system is not being used yet, since for the most part, it is in-memory repository. This could change though (and also based on team's preference)
-* Dependency injection is not given much priority yet. This can be a bottle-neck if the app expands and requires
-external services (DynamoDb Client, ElasticSearch, S3Client/AWS SDK etc) in future.
-* Reduce more lines if possible.
+* Dependency injection is not given much priority yet. But we are not worrying about it now given the scope of the problem forthe time being.
+* Reduce more code lines if possible. Some parts of the code could be cleaned up to reduce the lines of code and project the core logic better.
 * Handling partial writes (when the repo is Elastic-search for instance), but this is for future.
 * scala-3 could have reduced the boiler-plate looking implicits.
