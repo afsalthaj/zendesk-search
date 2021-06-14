@@ -25,8 +25,8 @@ Search fields from each `Json` (input is `JsonArray`) is obtained by
 **decomposing Json structure**(https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSyntax.scala#L15).
 
 After the write is finished, the secondary index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
-This complex logic is actually delegated to `Monoid[IndexedInMemory]`, and using it in the `foldMonoid` of `fs2.Stream`
-(having to write less code)
+This merge of index (grabbing all index of a search term) is done by the `Monoid` 
+instance of `IndexedInMemory`, which is used with `foldMonoid` of `fs2.Stream`
 
 ### Read
 The search query is essentially `Field[String, String]` (in this usecase).
