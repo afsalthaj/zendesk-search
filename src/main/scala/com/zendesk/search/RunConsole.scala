@@ -6,6 +6,7 @@ import com.zendesk.search.io.ConsoleIO
 import com.zendesk.search.repo.Field
 import cats.syntax.show._
 import com.zendesk.search.ZenDeskSearch.ZenDeskSearchResult
+import com.zendesk.search.prettyprint.ShowInstances._
 
 object RunConsole {
   def apply[A](

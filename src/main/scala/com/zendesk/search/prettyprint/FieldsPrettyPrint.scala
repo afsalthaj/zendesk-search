@@ -1,8 +1,8 @@
-package com.zendesk.search.support
+package com.zendesk.search.prettyprint
 
 import cats.Show
-import com.zendesk.search.repo.Field
 import cats.syntax.show._
+import com.zendesk.search.repo.Field
 
 object FieldsPrettyPrint {
   def apply[K: Show, V: Show](list: List[Field[K, V]]): String =

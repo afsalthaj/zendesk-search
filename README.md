@@ -158,3 +158,4 @@ The patterns are subjected to change based on PR reviews from the team.
 external services (DynamoDb Client, ElasticSearch, S3Client/AWS SDK etc) in future.
 * Reduce more lines if possible.
 * Handling partial writes (when the repo is Elastic-search for instance), but this is for future.
+* scala-3 could have reduced the boiler-plate looking implicits.

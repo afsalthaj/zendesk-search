@@ -7,7 +7,6 @@ import com.zendesk.search.model.Organisation.OrgId
 import com.zendesk.search.model.{ FieldNames, Organisation, Ticket, User }
 import monocle.{ Lens, Optional }
 import com.zendesk.search.repo.{ Field, Repo }
-import cats.syntax.show._
 import cats.syntax.traverse._
 
 final case class ZenDeskSearch(
@@ -48,9 +47,11 @@ final case class ZenDeskSearch(
 
   /**
    * A/B/C can be Org, Ticket or User
+   * Id: PrimaryKey type
+   * OrgId: Organization Id type (we could make it configurable if the relationship is based on another field)
    * Q: Query
    */
-  def get[A: Show, B: Show, C: Show, Q, Id, OrgId](
+  def get[A, B, C, Q, Id, OrgId](
     repoA: Repo[Id, Q, A],
     repoB: Repo[Id, Q, B],
     repoC: Repo[Id, Q, C],
@@ -61,12 +62,13 @@ final case class ZenDeskSearch(
     searchOrgInC: OrgId => Q
   )(implicit
     optionalOrgId: Optional[A, OrgId],
-    primarKey: Lens[B, Id]
+    primaryKey: Lens[B, Id]
   ): IO[List[GenericResult[A, B, C]]] =
     for {
       as  <- repoA.query(query)
       res <- as.traverse { a =>
-               val oId: Option[OrgId] = optionalOrgId.getOption(a)
+               val oId: Option[OrgId] =
+                 optionalOrgId.getOption(a)
 
                for {
                  bs <- oId match {
@@ -85,23 +87,9 @@ final case class ZenDeskSearch(
 object ZenDeskSearch {
   final case class GenericResult[A, B, C](a: A, b: List[B], c: List[C])
 
-  object GenericResult {
-    implicit def showResult[A: Show, B: Show, C: Show]: Show[GenericResult[A, B, C]] = (t: GenericResult[A, B, C]) =>
-      List(t.a.show, t.b.map(_.show).mkString("\n"), t.c.map(_.show).mkString("\n")).mkString("\n")
-  }
-
   sealed trait ZenDeskSearchResult
 
   object ZenDeskSearchResult {
-    implicit val showSearchResult: Show[ZenDeskSearchResult] = {
-      case Users(list)         => lineSeparatedString(list.map(r => r.show))
-      case Organisations(list) => lineSeparatedString(list.map(r => r.show))
-      case Tickets(list)       => lineSeparatedString(list.map(r => r.show))
-    }
-
-    def lineSeparatedString(list: List[String]): String =
-      if (list.isEmpty) "-- Not Found --" else list.mkString("\n")
-
     final case class Users(list: List[GenericResult[User, Organisation, Ticket]])         extends ZenDeskSearchResult
     final case class Organisations(list: List[GenericResult[Organisation, Ticket, User]]) extends ZenDeskSearchResult
     final case class Tickets(list: List[GenericResult[Ticket, Organisation, User]])       extends ZenDeskSearchResult

@@ -7,7 +7,7 @@ import cats.syntax.either._
 import monocle.Optional
 import monocle.Lens
 import com.zendesk.search.repo.Field
-import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSupport }
+import com.zendesk.search.support.JsonSupport
 
 /**
  * Note: The entities could actually possess the correct
@@ -26,7 +26,7 @@ import com.zendesk.search.support.{ FieldsPrettyPrint, JsonShowInstance, JsonSup
  */
 final case class Ticket(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object Ticket extends JsonSupport with JsonShowInstance {
+object Ticket extends JsonSupport {
   def fromJson(json: Json): Either[String, Ticket] = {
     val doc = json.hcursor
 
@@ -49,22 +49,11 @@ object Ticket extends JsonSupport with JsonShowInstance {
 
   implicit val ticketOrgId: Optional[Ticket, Organisation.OrgId] =
     Optional[Ticket, Organisation.OrgId](_.orgId)(a => s => s.copy(orgId = Some(a)))
-
-  implicit val showTicket: Show[Ticket] =
-    (t: Ticket) => s"""
-                      |
-                      |## TICKET
-                      |----------------------------------------
-                      |${FieldsPrettyPrint(t.fields)}
-                      |
-                      |----------------------------------------
-                      |
-                      |""".stripMargin
 }
 
 final case class User(fields: List[Field[String, Json]], id: String, orgId: Option[Organisation.OrgId])
 
-object User extends JsonSupport with JsonShowInstance {
+object User extends JsonSupport {
   def fromJson(json: Json): Either[String, User] = {
     val doc = json.hcursor
 
@@ -87,22 +76,11 @@ object User extends JsonSupport with JsonShowInstance {
 
   implicit val userOrgId: Optional[User, Organisation.OrgId] =
     Optional[User, Organisation.OrgId](_.orgId)(a => s => s.copy(orgId = Some(a)))
-
-  implicit val showUser: Show[User] =
-    (t: User) => s"""
-                    |
-                    |## USER
-                    |----------------------------------------
-                    |${FieldsPrettyPrint(t.fields)}
-                    |
-                    |----------------------------------------
-                    |
-                    |""".stripMargin
 }
 
 final case class Organisation(fields: List[Field[String, Json]], id: Organisation.OrgId)
 
-object Organisation extends JsonSupport with JsonShowInstance {
+object Organisation extends JsonSupport {
   final case class OrgId(id: String)
 
   def fromJson(json: Json): Either[String, Organisation] = {
@@ -120,15 +98,4 @@ object Organisation extends JsonSupport with JsonShowInstance {
 
   implicit val orgIdOptional: Optional[Organisation, Organisation.OrgId] =
     Optional[Organisation, Organisation.OrgId](t => Some(t.id))(a => s => s.copy(id = a))
-
-  implicit val showOrganisation: Show[Organisation] =
-    (t: Organisation) => s"""
-                            |
-                            |## ORGANISATION
-                            |----------------------------------------
-                            |${FieldsPrettyPrint(t.fields)}
-                            |
-                            |----------------------------------------
-                            |
-                            |""".stripMargin
 }
