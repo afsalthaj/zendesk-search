@@ -15,7 +15,7 @@ class IndexedInMemorySpec
     with Matchers
     with TestSupport
     with ScalaCheckPropertyChecks
-    with ArbitraryInstances {
+    with ArbitraryJsonInstance {
   "IndexedInMemory works for singleton data" - {
     "given two indexed in-memory the monoidal addition implements indexing" in {
       final case class A(id: Int, list: List[Field[Int, Int]])

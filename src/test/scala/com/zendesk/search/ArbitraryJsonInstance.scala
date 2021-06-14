@@ -1,12 +1,10 @@
 package com.zendesk.search
 
-import com.zendesk.search.model.Organisation.OrgId
-import com.zendesk.search.model.{ Organisation, Ticket, User }
+import _root_.io.circe.{ Json, _ }
+import com.zendesk.search.model.Organisation
 import org.scalacheck.{ Arbitrary, Gen }
-import _root_.io.circe.Json
-import _root_.io.circe._
 
-trait ArbitraryInstances {
+trait ArbitraryJsonInstance {
   def maxJsonArraySize: Int  = 10
   def maxJsonDepth: Int      = 5
   def maxJsonObjectSize: Int = 10

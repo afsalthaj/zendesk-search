@@ -5,7 +5,7 @@ import org.scalacheck.{ Arbitrary, Gen }
 import _root_.io.circe.Json
 import com.zendesk.search.support.JsonSyntax
 
-trait ArbitraryEntities extends ArbitraryInstances with JsonSyntax {
+trait ArbitraryEntities extends ArbitraryJsonInstance with JsonSyntax {
   def addKeyValue(key: String, value: String): Json => Json =
     _.mapObject(_.+:(key, Json.fromString(value)))
 
