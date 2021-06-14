@@ -82,9 +82,6 @@ cd target/scala-2.13
 
 ```scala
 
-[nix-shell:~/github/zendesk-search/target/scala-2.13]$ ./zendesk-search
-
-
 Type 'quit' to exit any time, Press Enter to continue
 
 Select 1 for Users, 2 for Tickets, or 3 for Organizations
