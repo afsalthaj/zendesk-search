@@ -6,6 +6,12 @@ import _root_.io.circe.Json
 import com.zendesk.search.support.JsonSyntax
 
 trait ArbitraryEntities extends ArbitraryJsonInstance with JsonSyntax {
+  def orgId: Gen[Organisation.OrgId] =
+    Gen.choose[Int](1, 10).map(r => Organisation.OrgId(r.toString))
+
+  def primaryKey: Gen[String] =
+    Gen.choose[Int](1, 5).flatMap(n => Gen.listOfN(n, Gen.alphaChar)).map(_.mkString)
+
   def addKeyValue(key: String, value: String): Json => Json =
     _.mapObject(_.+:(key, Json.fromString(value)))
 
