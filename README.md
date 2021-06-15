@@ -18,21 +18,30 @@ abstract sealed case class IndexedInMemory[Id, K, V, A](
 
 Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
 
-The primary index is, for this use case can be, `Map[PrimaryKey, Json]`.
-The search index is a map of search field `Field("country", "aus")` to the PrimaryKeys (Example: `Map(Field("country", "aus") -> List("1"))`),
+The primary index is `Map[PrimaryKey, Json]`. 
+The search index is a `Map[Field[String, String], List[PrimaryKey]]`. Example: `Map(Field("country", "aus") -> List("1"))`
 
-Search fields from each `Json` (input is `JsonArray`) is obtained by
-**decomposing Json structure** (https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSupport.scala#L16).
+Search fields from each `Json` is obtained by 
+**tokenising/decomposing the values in Json structure per primary-key** 
 
-After the write is finished, the search index will a map of search-field to a list of `PrimaryKey` of `Jsons` in the doc.
-This merge of index (grabbing all index of a search term) is done by the `Monoid` 
-instance of `IndexedInMemory`, which is used with `foldMonoid` of `fs2.Stream`
+Tokenization is here: https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/support/JsonSupport.scala#L16.
+
+After data-write to (in-memory) store is finished, 
+the search index will be a `map` of `Field[String, String]` to a list of `PrimaryKey`, so that look-up is faster.
+The concatenation of list of index per `Field[String, String]` (i.e, `(search-field, search-value)`) 
+is done by the `Monoid` instance of `IndexedInMemory`, which is then used with `foldMonoid` of `fs2.Stream`.
+
+`fs2.Stream` approach will help us to sink the data to a better store in near-future (say, elastic-search) without grabbing the whole
+data into memory, while still allowing fine-grained control over (side) effect-ful computation 
+(Example: error handling especially talking to outside-world, concurrency/parallel-writes-to-partitions) 
+backed by `cats.effect.IO`.
 
 ### Read
-The search query is essentially `Field[String, String]` (in this usecase).
+The search query is essentially `Field[String, String]` (Note: The core logic is independent of `String`s).
+
 That is, the search term is a string, and the search value is also a string. Example: `Field("_id", "1")`.
 Result of this query can be obtained by first hitting the search index (inverted index) to get the list
-of `ids`, and traversing the `ids` to hit the primary to further obtain the real `Json` values.
+of `ids`, and traversing the `ids` to hit the primary-index to further obtain the real `Json` values (Note: The core logic is independent of the data being a `Json`).
 
 
 ## Installation
