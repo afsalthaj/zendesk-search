@@ -158,7 +158,7 @@ The exact effect system (or changing it to even `Either[String, Result]`) can ha
 ## Why polymorphic parameterization all over the place?
 
 As much as possible, parameteric polymorphism is being used to improve reasonability.
-The patterns are subjected to change based on PR reviews from the team.
+The patterns are subjected to change based on PR reviews/preference from the team.
 
 ## What could be improved?
 
