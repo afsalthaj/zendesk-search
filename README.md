@@ -19,8 +19,12 @@ abstract sealed case class IndexedInMemory[Id, K, V, A](
 Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
 
 The primary index is `Map[PrimaryKey, Json]`. 
-The search index is a `Map[Field[String, String], List[PrimaryKey]]`. Example: `Map(Field("country", "aus") -> List("1"))`
+Note that, the core-logic is independent of data being a `Json`, or `PrimaryKey` being a String. They are polymorphic.
 
+The search index is a `Map[Field[String, String], List[PrimaryKey]]`. Example: `Map(Field("country", "aus") -> List("1"))`.
+Again, the core-logic is independent of field (key-value pair) being a `(String, String)`.
+
+### Additional details
 Search fields from each `Json` is obtained by 
 **tokenising/decomposing the values in Json structure per primary-key** 
 
