@@ -133,7 +133,7 @@ This should be existing as Json files which you will have to pass as command lin
 
 * Search is basic. There is no prefix/suffix/like search. There is no sorted keys in index to enable binary search.
 * Search is always per key. You have to enter the key (search term) first to then search for the value.
-* Search lists down all the information (all field values) of all related entities (instead of assuming a particular field).
+* Search lists down all the information (all field values) of all related entities (instead of assuming a particular field). This can be easily/confidently changed as well since we hardly use `toString` anywhere.
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities
 are assumed to have a required primary-key, and an optional organization_id.
  
