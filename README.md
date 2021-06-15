@@ -16,8 +16,6 @@ abstract sealed case class IndexedInMemory[Id, K, V, A](
 
 ### Write
 
-Example: https://github.com/afsalthaj/zendesk-search/blob/master/src/test/scala/com/zendesk/search/IndexedInMemorySpec.scala#L38
-
 The primary index is `Map[PrimaryKey, Json]`. 
 Note that, the core-logic is independent of data being a `Json`, or `PrimaryKey` being a String. They are polymorphic.
 
