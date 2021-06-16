@@ -127,13 +127,16 @@ three documents that are as follows
 
 This should be existing as Json files which you will have to pass as command line arguments
  
-## Assumptions
+## Assumptions/Boundaries
 
 * Search is basic. There is no prefix/suffix/like search. There is no sorted keys in index to enable binary search.
 * Search is always per key. You have to enter the key (search term) first to then search for the value.
 * Search lists down all the information (all field values) of all related entities (instead of assuming a particular field). This can be easily/confidently changed as well since we hardly use `toString` anywhere.
 * Json decoding is minimised as much as possible, instead of decoding it to strictly typed data (case classes). All the entities
 are assumed to have a required primary-key, and an optional organization_id.
+* Cross document search could also be implemented by wrapping in-memory index to a doc, however, this is avoided
+unless it is really required.
+
  
 ## Libraries used
 
@@ -168,3 +171,30 @@ The patterns are subjected to change based on PR reviews/preference from the tea
 * Reduce more code lines if possible. Some parts of the code could be cleaned up to reduce the lines of code and project the core logic better.
 * Handling partial writes (when the repo is Elastic-search for instance), but this is for future.
 * scala-3 could have reduced the boiler-plate looking implicits.
+
+## Cross Document Search
+Cross document search is kept on hold until it is required. This is being able to search for a particular
+search field and value, and bring the information where that appears across all documents. 
+This is fairly possible, by doing something along the below lines (of pseudoish code)
+
+```scala
+
+final case class Doc[DocId, Id, K, V, A](
+  id: Map[DocId, IndexedInMemory[Id, K, V, A]], 
+  docSearch: Map[Field[K, V], List[DocId]]
+)
+
+object Doc {
+  implicit def monoidOfDoc[DocId, Id, K, V, A] = new Monoid[Doc[DocId, Id, K, V, A]] {
+    override def combine(x: Doc[DocId, Id, K, V, A], y: Doc[DocId, Id, K, V, A]): Doc[DocId, Id, K, V, A] =
+      Doc((x.id ++ y.id), x.docSearch |+| y.docSearch)
+    override def empty: Doc[DocId, Id, K, V, A]                                                           =
+      Doc(Map.empty, Map.empty)
+  }
+}
+```
+
+Each document write (to index) returns a `Doc` as the output, and after all the documents are written to the index,
+we will have a `List[Doc]` which we can easily squash, resulting in each field mapped to the list of document ids.
+
+`Monoid` is simply to avoid the `get` and `update` of  docSearch `Map` (and fragile lines of code that may come with it)
