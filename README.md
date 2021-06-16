@@ -194,7 +194,8 @@ object Doc {
 }
 ```
 
-Each document write (to index) returns a `Doc` as the output, and after all the documents are written to the index,
-we will have a `List[Doc]` which we can easily squash, resulting in each field mapped to the list of document ids.
+Each document write to its own specific index returns a `Doc` as the output,
+where `docSearch` field will be a map of each search field to that particular `DocId` wrapped in a `List` (so that we can later merge).
 
-`Monoid` is simply to avoid the `get` and `update` of  docSearch `Map` (and fragile lines of code that may come with it)
+After all the documents are written to the their own `IndexedInMemory`, 
+we will have a `List[Doc]` which we can easily squash, resulting in each field mapped to the list of `DocId`s.
