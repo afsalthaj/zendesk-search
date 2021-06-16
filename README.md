@@ -175,7 +175,7 @@ The patterns are subjected to change based on PR reviews/preference from the tea
 ## Cross Document Search
 Cross document search is kept on hold until it is required. This is being able to search for a particular
 search field and value, and bring the information where that appears across all documents. 
-This is fairly possible, by doing something along the below lines (of pseudoish code)
+This is fairly possible, by doing something along the below lines (of pseudoish code).
 
 ```scala
 
