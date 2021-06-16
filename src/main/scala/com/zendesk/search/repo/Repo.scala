@@ -33,9 +33,11 @@ object Repo {
   def empty[PK, Q, A]: Repo[PK, Q, A] =
     Repo.from[PK, Q, A](_ => IO.pure(None), _ => IO.pure(Nil))
 
-  def indexedInMemoryRepo[A, K, V1, V2, Id](
-    stream: Stream[IO, A],
-    f: A => List[Field[K, V1]],
+  def indexedInMemoryRepo[Id, K, V1, V2, A](
+    stream: Stream[IO, A]
+  )(
+    f: A => List[Field[K, V1]]
+  )(
     g: V1 => List[V2]
   )(implicit
     H: Lens[A, Id]

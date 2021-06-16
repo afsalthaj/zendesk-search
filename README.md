@@ -4,7 +4,7 @@
 
 ## Core logic / Search
 
-https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala#L30
+https://github.com/afsalthaj/zendesk-search/blob/master/src/main/scala/com/zendesk/search/repo/IndexedInMemory.scala
 
 ```scala
 abstract sealed case class IndexedInMemory[Id, K, V, A](

@@ -21,7 +21,7 @@ class JsonSupportSpec
     "All types of Json can be decomposed to strings" in {
       forAll { (json: Json) =>
         Try {
-          json.decomposeString
+          json.tokeniseJson
         }.toEither.isRight shouldBe (true)
       }
     }

@@ -8,6 +8,13 @@ import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import fs2.Stream
 import monocle.Lens
+import cats.syntax.foldable._
+import cats.instances.map._
+import cats.instances.list._
+import cats.syntax.traverse._
+
+import scala.collection.immutable
+import org.scalactic.Bool
 
 class RepoSpec
     extends AsyncFreeSpec
@@ -17,29 +24,33 @@ class RepoSpec
     with ScalaCheckPropertyChecks
     with ArbitraryJsonInstance {
 
-  // Most of the tests are in IndexedInMemorySpec
-  "Repp roundtrip" - {
-    "All primary keys are available in Repo" in {
-      // This implies if a single record of data is a tuple with primary key as the first element,
-      // In below particular test case, this tuple is actually (String, Map[String, List[String]])
-      implicit def lensTuple[A, B]: Lens[(A, B), A] =
-        Lens[(A, B), A](_._1)(a => b => (a, b._2))
+  "Repo: A data where value of all primary keys have the same data." - {
+    "Query of any search-field-search-term returns the full data" in {
+      forAll { (commonValue: Map[String, List[String]], arbitraryPks: List[String]) =>
+        // pks should be distinct
+        val pks = arbitraryPks.distinct
 
-      forAll { (data: Map[String, Map[String, List[String]]]) =>
-        val indexedInMemory =
-          IndexedInMemory
-            .from[String, String, List[String], String, (String, Map[String, List[String]])](Stream.fromIterator[IO](data.iterator, 1))(v =>
-              v._2.map({ case (k, v) => Field(k, v) }).toList
-            )(identity)
-            .unsafeRunSync()(cats.effect.unsafe.implicits.global)
+        val fullData: Map[String, Map[String, List[String]]]     =
+          pks.foldMap(pk => Map(pk -> commonValue))
 
-        val repo =
-          Repo.fromIndexedInMemory(indexedInMemory)
+        val allSearchNameSearchTerm: List[Field[String, String]] =
+          commonValue.toList
+            .flatMap(
+              { case (fieldName, fieldValues) =>
+                fieldValues.map(fieldValue => Field(fieldName, fieldValue))
+              }
+            )
 
-        val existsInRepo: String => Boolean =
-          repo.id(_).map(_.isDefined).unsafeRunSync()(cats.effect.unsafe.implicits.global)
+        val allQueriesReturnsSameData: IO[Boolean] =
+          for {
+            repo    <- Repo.indexedInMemoryRepo(
+                         Stream.fromIterator[IO](fullData.iterator, 1)
+                       )({ case (_, data) => data.map({ case (fieldName, value) => Field(fieldName, value) }).toList })(identity)
 
-        data.keys.toList.forall(existsInRepo) shouldBe (true)
+            allData <- allSearchNameSearchTerm.traverse(field => repo.query(field).map(_.toMap))
+          } yield allData.forall(d => d == fullData)
+
+        allQueriesReturnsSameData.runIO shouldBe true
       }
     }
   }
