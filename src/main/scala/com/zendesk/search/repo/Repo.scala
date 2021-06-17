@@ -33,7 +33,7 @@ object Repo {
   def empty[PK, Q, A]: Repo[PK, Q, A] =
     Repo.from[PK, Q, A](_ => IO.pure(None), _ => IO.pure(Nil))
 
-  def indexedInMemoryRepo[Id, K, V1, V2, A](
+  def indexedInMemoryFromStream[Id, K, V1, V2, A](
     stream: Stream[IO, A]
   )(
     f: A => List[Field[K, V1]]
@@ -63,7 +63,7 @@ object Repo {
   // to use simple in-memory.
   type SubOptimalQuery[A] = A => Boolean
 
-  def inMemoryRepo[A, Id](stream: Stream[IO, A])(implicit H: Lens[A, Id]): IO[Repo[Id, Repo.SubOptimalQuery[A], A]] =
+  def inMemoryFromStream[A, Id](stream: Stream[IO, A])(implicit H: Lens[A, Id]): IO[Repo[Id, Repo.SubOptimalQuery[A], A]] =
     stream.compile.toList.map(r => fromInMemory(InMemory(r)))
 
   def fromInMemory[A, Id](

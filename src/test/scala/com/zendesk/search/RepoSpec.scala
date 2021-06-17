@@ -43,9 +43,11 @@ class RepoSpec
 
         val allQueriesReturnsSameData: IO[Boolean] =
           for {
-            repo    <- Repo.indexedInMemoryRepo(
-                         Stream.fromIterator[IO](fullData.iterator, 1)
-                       )({ case (_, data) => data.map({ case (fieldName, value) => Field(fieldName, value) }).toList })(identity)
+            repo <- Repo.indexedInMemoryFromStream(
+                      Stream.fromIterator[IO](fullData.iterator, 1)
+                    )({ case (_, data) =>
+                      data.map({ case (fieldName, value) => Field(fieldName, value) }).toList
+                    })(identity)
 
             allData <- allSearchNameSearchTerm.traverse(field => repo.query(field).map(_.toMap))
           } yield allData.forall(d => d == fullData)

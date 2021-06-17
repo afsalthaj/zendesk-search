@@ -31,18 +31,18 @@ object Main extends IOApp with JsonSupport with IOSupport {
       cfg <- IO.fromEither(AppConfig.config.parse(args, envMap).leftMap(help => new RuntimeException(help.show)))
 
       org <- Repo
-               .indexedInMemoryRepo(
+               .indexedInMemoryFromStream(
                  Read.fromJsonFile(cfg.orgFilePath)(Organisation.fromJson)
                )(_.fields)(_.tokeniseJson)
                .withMessageOnError(s"Failed to read organisation data.")
 
       user   <- Repo
-                  .indexedInMemoryRepo(
+                  .indexedInMemoryFromStream(
                     Read.fromJsonFile(cfg.userFilePath)(User.fromJson)
                   )(_.fields)(_.tokeniseJson)
                   .withMessageOnError(s"Failed to read user data.")
       ticket <- Repo
-                  .indexedInMemoryRepo(
+                  .indexedInMemoryFromStream(
                     Read.fromJsonFile(cfg.ticketFilePath)(Ticket.fromJson)
                   )(_.fields)(_.tokeniseJson)
                   .withMessageOnError(s"Failed to read ticket data.")
