@@ -41,6 +41,7 @@ object Main extends IOApp with JsonSupport with IOSupport {
                     Read.fromJsonFile(cfg.userFilePath)(User.fromJson)
                   )(_.fields)(_.tokeniseJson)
                   .withMessageOnError(s"Failed to read user data.")
+      
       ticket <- Repo
                   .indexedInMemoryFromStream(
                     Read.fromJsonFile(cfg.ticketFilePath)(Ticket.fromJson)
